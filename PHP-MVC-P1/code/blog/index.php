@@ -28,4 +28,8 @@ while (($row = $statement->fetch())) {
 }
 
 // Call the template
+require('../src/model.php');
+
+$posts = getPosts();
+
 require('../templates/homepage.php');

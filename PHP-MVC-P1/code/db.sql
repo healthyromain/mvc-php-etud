@@ -1,4 +1,4 @@
--- Active: 1727099905208@@127.0.0.1@3306
+-- Active: 1728207141073@@127.0.0.1@3306
 -- Ce fichier sert à initialiser la base de données
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";

@@ -1,6 +1,6 @@
 <?php
 
-function connectDb()
+function dbConnect()
 {
     try {
         $database = new PDO(
@@ -11,17 +11,17 @@ function connectDb()
         $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $database;
     } catch (Exception $e) {
-        die('Error: ' . $e->getMessage());
+        die('Erreur : ' . $e->getMessage());
     }
 }
 
 function getPosts()
 {
-    $database = connectDb();
+    $database = dbConnect();
 
     $statement = $database->query(
-        "SELECT id, titre, contenu,
-                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
+        "SELECT id, titre AS title, contenu AS content,
+                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS french_creation_date
          FROM billets
          ORDER BY date_creation DESC
          LIMIT 0, 5"
@@ -30,9 +30,9 @@ function getPosts()
     $posts = [];
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $posts[] = [
-            'title' => $row['titre'],
-            'french_creation_date' => $row['date_creation_fr'],
-            'content' => $row['contenu'],
+            'title' => $row['title'],
+            'french_creation_date' => $row['french_creation_date'],
+            'content' => $row['content'],
             'identifier' => $row['id'],
         ];
     }
@@ -40,17 +40,17 @@ function getPosts()
     return $posts;
 }
 
-function getPost($id)
+function getPost($identifier)
 {
-    $database = connectDb();
+    $database = dbConnect();
 
     $statement = $database->prepare(
-        "SELECT id, titre, contenu,
-                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
+        "SELECT id, titre AS title, contenu AS content,
+                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS french_creation_date
          FROM billets
          WHERE id = ?"
     );
-    $statement->execute([$id]);
+    $statement->execute([$identifier]);
     $row = $statement->fetch(PDO::FETCH_ASSOC);
 
     if (!$row) {
@@ -58,16 +58,16 @@ function getPost($id)
     }
 
     return [
-        'title' => $row['titre'],
-        'french_creation_date' => $row['date_creation_fr'],
-        'content' => $row['contenu'],
+        'title' => $row['title'],
+        'french_creation_date' => $row['french_creation_date'],
+        'content' => $row['content'],
         'identifier' => $row['id'],
     ];
 }
 
-function getComments($postId)
+function getComments($identifier)
 {
-    $database = connectDb();
+    $database = dbConnect();
 
     $statement = $database->prepare(
         "SELECT author, comment,
@@ -76,7 +76,16 @@ function getComments($postId)
          WHERE post_id = ?
          ORDER BY comment_date DESC"
     );
-    $statement->execute([$postId]);
+    $statement->execute([$identifier]);
 
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+    $comments = [];
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $comments[] = [
+            'author' => $row['author'],
+            'french_creation_date' => $row['french_creation_date'],
+            'comment' => $row['comment'],
+        ];
+    }
+
+    return $comments;
 }

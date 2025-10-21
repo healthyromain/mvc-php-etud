@@ -1,17 +1,14 @@
 <?php
 function commentDbConnect()
 {
-    try {
-        $database = new PDO(
-            'mysql:host=localhost;dbname=blog;charset=utf8',
-            'root',
-            'mdp'
-        );
-        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $database;
-    } catch (Exception $e) {
-        die('Erreur : ' . $e->getMessage());
-    }
+    
+    $database = new PDO(
+        'mysql:host=localhost;dbname=blog;charset=utf8',
+        'root',
+        'mdp'
+    );
+    $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $database;
 }
 
 function getComments($postId)
@@ -29,7 +26,7 @@ function getComments($postId)
 }
 
 
-function createComment(string $postId, string $author, string $comment)
+function createComment($postId, $author, $comment)
 {
     $database = commentDbConnect();
     $statement = $database->prepare(

@@ -1,27 +1,21 @@
 <?php
-
 function dbConnect()
 {
-    try {
-        $database = new PDO(
-            'mysql:host=localhost;dbname=blog;charset=utf8',
-            'root',
-            'mdp'
-        );
-        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $database;
-    } catch (Exception $e) {
-        die('Erreur : ' . $e->getMessage());
-    }
+    $database = new PDO(
+        'mysql:host=localhost;dbname=blog;charset=utf8',
+        'root',
+        'mdp'
+    );
+    $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $database;
 }
 
 function getPosts()
 {
-    $database = dbConnect();
-
-    $statement = $database->query(
-        "SELECT id, titre AS title, contenu AS content,
-                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS french_creation_date
+    $db = dbConnect();
+    $statement = $db->query(
+        "SELECT id, titre, contenu,
+                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
          FROM billets
          ORDER BY date_creation DESC
          LIMIT 0, 5"
@@ -30,62 +24,33 @@ function getPosts()
     $posts = [];
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $posts[] = [
-            'title' => $row['title'],
-            'french_creation_date' => $row['french_creation_date'],
-            'content' => $row['content'],
-            'identifier' => $row['id'],
+            'title' => $row['titre'],
+            'french_creation_date' => $row['date_creation_fr'],
+            'content' => $row['contenu'],
+            'identifier' => $row['id'],   // ✅ ajouté
         ];
     }
 
     return $posts;
 }
 
-function getPost($identifier)
-{
-    $database = dbConnect();
 
-    $statement = $database->prepare(
-        "SELECT id, titre AS title, contenu AS content,
-                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS french_creation_date
+function getPost($id)
+{
+    $db = dbConnect();
+    $statement = $db->prepare(
+        "SELECT id, titre, contenu,
+                DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
          FROM billets
          WHERE id = ?"
     );
-    $statement->execute([$identifier]);
+    $statement->execute([$id]);
     $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if (!$row) {
-        die('Erreur : billet introuvable');
-    }
-
     return [
-        'title' => $row['title'],
-        'french_creation_date' => $row['french_creation_date'],
-        'content' => $row['content'],
-        'identifier' => $row['id'],
+        'title' => $row['titre'],
+        'french_creation_date' => $row['date_creation_fr'],
+        'content' => $row['contenu'],
+        'identifier' => $row['id'],   // ✅ ajouté
     ];
-}
-
-function getComments($identifier)
-{
-    $database = dbConnect();
-
-    $statement = $database->prepare(
-        "SELECT author, comment,
-                DATE_FORMAT(comment_date, '%d/%m/%Y à %Hh%imin%ss') AS french_creation_date
-         FROM comments
-         WHERE post_id = ?
-         ORDER BY comment_date DESC"
-    );
-    $statement->execute([$identifier]);
-
-    $comments = [];
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $comments[] = [
-            'author' => $row['author'],
-            'french_creation_date' => $row['french_creation_date'],
-            'comment' => $row['comment'],
-        ];
-    }
-
-    return $comments;
 }

@@ -28,3 +28,18 @@ ALTER TABLE `billets`
 
 ALTER TABLE `billets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+  CREATE TABLE IF NOT EXISTS comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_id INT NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  comment TEXT NOT NULL,
+  comment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_comments_billets FOREIGN KEY (post_id) REFERENCES billets(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Données de test (assure-toi que les billets 1 et 2 existent)
+INSERT INTO comments (post_id, author, comment, comment_date) VALUES
+(1, 'Alice', 'Super article !', '2022-02-17 16:30:00'),
+(1, 'Bob', 'Très intéressant.', '2022-02-17 16:31:00'),
+(2, 'Charlie', 'Bienvenue sur le blog !', '2022-02-17 16:32:00');

@@ -10,6 +10,13 @@
     <p>
         <strong><?= htmlspecialchars($author) ?></strong>
         le <?= $date ?>
+        <?php
+            // provide an edit link for each comment
+            $commentIdForLink = is_object($comment) ? (isset($comment->id) ? $comment->id : '') : (isset($comment['id']) ? $comment['id'] : '');
+            if ($commentIdForLink) {
+                echo ' - <a href="index.php?action=editComment&commentId=' . htmlspecialchars($commentIdForLink) . '">Modifier</a>';
+            }
+        ?>
     </p>
     <p><?= nl2br(htmlspecialchars($text)) ?></p>
 <?php endforeach; ?>

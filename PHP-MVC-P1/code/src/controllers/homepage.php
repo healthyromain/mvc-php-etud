@@ -3,6 +3,7 @@ require_once(__DIR__ . '/../model.php'); // chemin vers model.php
 
 function homepage()
 {
-    $posts = getPosts(); // doit exister dans model.php
+    $postRepository = new PostRepository();
+    $posts = $postRepository->getPosts();
     require(__DIR__ . '/../../templates/homepage.php');
 }

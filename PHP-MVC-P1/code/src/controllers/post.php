@@ -1,15 +1,26 @@
 <?php
+namespace Application\Controller;
+
 require_once(__DIR__ . '/../lib/database.php');
-require_once(__DIR__ . '/../model.php');
+require_once(__DIR__ . '/../model/post.php');
 require_once(__DIR__ . '/../model/comment.php');
+
+use Application\Lib\DatabaseConnection;
+use Application\Model\Post\PostRepository;
+use Application\Model\Comment\CommentRepository;
 
 function post($identifier)
 {
+    $connection = new DatabaseConnection();
+
     $postRepository = new PostRepository();
-    $postRepository->connection = new DatabaseConnection();
+    $postRepository->connection = $connection;
     $post = $postRepository->getPost($identifier);
+
+    // share the same DatabaseConnection with the comments repository
     $commentRepository = new CommentRepository();
-    $commentRepository->connection = $postRepository->connection;
+    $commentRepository->connection = $connection;
     $comments = $commentRepository->getComments($identifier);
+
     require(__DIR__ . '/../../templates/post.php');
 }

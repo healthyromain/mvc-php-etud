@@ -1,6 +1,11 @@
 <?php
+namespace Application\Controller;
+
 require_once(__DIR__ . '/../lib/database.php');
 require_once(__DIR__ . '/../model/comment.php');
+
+use Application\Lib\DatabaseConnection;
+use Application\Model\Comment\CommentRepository;
 
 function addComment($postId, array $input)
 {
@@ -8,7 +13,7 @@ function addComment($postId, array $input)
         $author = $input['author'];
         $comment = $input['comment'];
     } else {
-        throw new Exception('Les données du formulaire sont invalides.');
+        throw new \Exception('Les données du formulaire sont invalides.');
     }
 
     $commentRepository = new CommentRepository();
@@ -16,7 +21,7 @@ function addComment($postId, array $input)
     $success = $commentRepository->createComment($postId, $author, $comment);
 
     if (!$success) {
-        throw new Exception("Impossible d'ajouter le commentaire !");
+        throw new \Exception("Impossible d'ajouter le commentaire !");
     } else {
         header('Location: index.php?action=post&id=' . $postId);
         exit;

@@ -1,6 +1,9 @@
 <?php
+namespace Application\Model\Comment;
 
 require_once(__DIR__ . '/../lib/database.php');
+
+use Application\Lib\DatabaseConnection;
 
 class Comment
 {
@@ -20,7 +23,7 @@ class CommentRepository
         $statement = $db->prepare($sql);
         $statement->execute([$postId]);
 
-        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
         $comments = [];
         foreach ($rows as $row) {
             $c = new Comment();

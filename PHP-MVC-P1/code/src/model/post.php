@@ -1,4 +1,9 @@
 <?php
+namespace Application\Model\Post;
+
+require_once(__DIR__ . '/../lib/database.php');
+
+use Application\Lib\DatabaseConnection;
 
 class Post
 {
@@ -7,8 +12,6 @@ class Post
     public $content;
     public $identifier;
 }
-
-require_once(__DIR__ . '/../lib/database.php');
 
 class PostRepository
 {
@@ -27,7 +30,7 @@ class PostRepository
         );
 
         $posts = [];
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
             $p = new Post();
             $p->title = $row['titre'];
             $p->frenchCreationDate = $row['date_creation_fr'];
@@ -47,8 +50,8 @@ class PostRepository
              FROM billets
              WHERE id = ?"
         );
-        $statement->execute([$id]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->execute([$id]);
+    $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         $p = new Post();
         $p->title = $row['titre'];

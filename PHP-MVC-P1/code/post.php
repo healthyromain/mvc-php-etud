@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/src/model.php';
+require __DIR__ . '/src/controllers/post.php';
 
 if (isset($_GET['id']) && (int)$_GET['id'] > 0) {
     $identifier = (int) $_GET['id'];
@@ -8,7 +8,4 @@ if (isset($_GET['id']) && (int)$_GET['id'] > 0) {
     exit;
 }
 
-$post = getPost($identifier);
-$comments = getComments($identifier);
-
-require __DIR__ . '/templates/post.php';
+\Application\Controller\post($identifier);

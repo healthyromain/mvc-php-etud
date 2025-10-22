@@ -8,14 +8,14 @@ try {
         if ($_GET['action'] === 'post') {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
-                post($identifier);
+                \Application\Controller\post($identifier);
             } else {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
         } elseif ($_GET['action'] === 'addComment') {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
-                addComment($identifier, $_POST);
+                \Application\Controller\addComment($identifier, $_POST);
             } else {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
@@ -23,7 +23,7 @@ try {
             throw new Exception("La page que vous recherchez n'existe pas.");
         }
     } else {
-        homepage();
+        \Application\Controller\homepage();
     }
 } catch (Exception $e) {
     $errorMessage = $e->getMessage();

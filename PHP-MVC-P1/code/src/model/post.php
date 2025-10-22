@@ -5,23 +5,33 @@ require_once(__DIR__ . '/../lib/database.php');
 
 use Application\Lib\DatabaseConnection;
 
+/**
+ * Représente un billet (Post) utilisé dans les vues.
+ */
 class Post
 {
     public $title;
+
     public $frenchCreationDate;
+
     public $content;
+
     public $identifier;
 }
 
+/**
+ * Repository pour manipuler les billets en base.
+ */
 class PostRepository
 {
-    // DatabaseConnection instance
     public $connection = null;
 
-    // retourne un tableau d'objets Post
+    /**
+     * Retourne un tableau d'objets Post (liste des billets).
+     */
     public function getPosts()
     {
-    $statement = $this->connection->getConnection()->query(
+        $statement = $this->connection->getConnection()->query(
             "SELECT id, titre, contenu,
                     DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
              FROM billets
@@ -30,7 +40,7 @@ class PostRepository
         );
 
         $posts = [];
-    while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
             $p = new Post();
             $p->title = $row['titre'];
             $p->frenchCreationDate = $row['date_creation_fr'];
@@ -42,16 +52,19 @@ class PostRepository
         return $posts;
     }
 
+    /**
+     * Retourne un Post pour l'identifiant fourni.
+     */
     public function getPost($id)
     {
-    $statement = $this->connection->getConnection()->prepare(
+        $statement = $this->connection->getConnection()->prepare(
             "SELECT id, titre, contenu,
                     DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
              FROM billets
              WHERE id = ?"
         );
-    $statement->execute([$id]);
-    $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $statement->execute([$id]);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         $p = new Post();
         $p->title = $row['titre'];

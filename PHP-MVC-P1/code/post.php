@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/src/autoload.php';
 require __DIR__ . '/src/controllers/post.php';
 
 if (isset($_GET['id']) && (int)$_GET['id'] > 0) {

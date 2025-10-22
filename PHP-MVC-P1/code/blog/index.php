@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../src/autoload.php');
 require_once(__DIR__ . '/../src/controllers/add_comment.php');
 require_once(__DIR__ . '/../src/controllers/homepage.php');
 require_once(__DIR__ . '/../src/controllers/post.php');

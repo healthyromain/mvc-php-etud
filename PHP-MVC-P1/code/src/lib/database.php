@@ -3,6 +3,7 @@ namespace Application\Lib;
 
 class DatabaseConnection
 {
+    /** @var \PDO|null */
     public $database = null;
 
     public function getConnection()

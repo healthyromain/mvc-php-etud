@@ -5,19 +5,28 @@ require_once(__DIR__ . '/../lib/database.php');
 
 use Application\Lib\DatabaseConnection;
 
+/**
+ * A single comment value object.
+ */
 class Comment
 {
     public $author;
+
     public $frenchCreationDate;
+
     public $comment;
+
     public $id;
+
     public $postId;
 }
 
+/**
+ * Repository providing comment persistence operations.
+ */
 class CommentRepository
 {
-    public $connection = null; // DatabaseConnection
-
+    public $connection = null;
     public function getComments($postId)
     {
         $db = $this->connection->getConnection();
@@ -56,7 +65,6 @@ class CommentRepository
         $c->author = $row['author'];
         $c->frenchCreationDate = $row['french_creation_date'];
         $c->comment = $row['comment'];
-        // attach post id for redirects
         $c->postId = $row['post_id'];
 
         return $c;

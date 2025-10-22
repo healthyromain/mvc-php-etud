@@ -17,7 +17,6 @@ function post($identifier)
     $postRepository->connection = $connection;
     $post = $postRepository->getPost($identifier);
 
-    // share the same DatabaseConnection with the comments repository
     $commentRepository = new CommentRepository();
     $commentRepository->connection = $connection;
     $comments = $commentRepository->getComments($identifier);

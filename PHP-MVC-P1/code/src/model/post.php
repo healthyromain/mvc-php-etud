@@ -8,29 +8,17 @@ class Post
     public $identifier;
 }
 
+require_once(__DIR__ . '/../lib/database.php');
+
 class PostRepository
 {
-    // connexion à la BDD (nullable)
-    public $database = null;
-
-    // initialise la connexion si nécessaire
-    public function dbConnect()
-    {
-        if ($this->database === null) {
-            $this->database = new PDO(
-                'mysql:host=localhost;dbname=blog;charset=utf8',
-                'root',
-                'mdp'
-            );
-            $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-    }
+    // DatabaseConnection instance
+    public $connection = null;
 
     // retourne un tableau d'objets Post
     public function getPosts()
     {
-        $this->dbConnect();
-        $statement = $this->database->query(
+    $statement = $this->connection->getConnection()->query(
             "SELECT id, titre, contenu,
                     DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
              FROM billets
@@ -51,11 +39,9 @@ class PostRepository
         return $posts;
     }
 
-    // retourne un objet Post
     public function getPost($id)
     {
-        $this->dbConnect();
-        $statement = $this->database->prepare(
+    $statement = $this->connection->getConnection()->prepare(
             "SELECT id, titre, contenu,
                     DATE_FORMAT(date_creation, '%d/%m/%Y à %Hh%imin%ss') AS date_creation_fr
              FROM billets

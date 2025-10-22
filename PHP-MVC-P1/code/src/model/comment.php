@@ -1,7 +1,14 @@
 <?php
+
+class Comment
+{
+    public $author;
+    public $frenchCreationDate;
+    public $comment;
+}
+
 function commentDbConnect()
 {
-    
     $database = new PDO(
         'mysql:host=localhost;dbname=blog;charset=utf8',
         'root',
@@ -22,7 +29,18 @@ function getComments($postId)
          ORDER BY comment_date DESC"
     );
     $statement->execute([$postId]);
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $comments = [];
+    foreach ($rows as $row) {
+        $c = new Comment();
+        $c->author = $row['author'];
+        $c->frenchCreationDate = $row['french_creation_date'];
+        $c->comment = $row['comment'];
+        $comments[] = $c;
+    }
+
+    return $comments;
 }
 
 

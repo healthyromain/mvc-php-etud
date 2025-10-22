@@ -1,15 +1,22 @@
 <h2>Commentaires</h2>
 
 <?php foreach ($comments as $comment): ?>
+    <?php
+        // support objects (Comment) or legacy associative arrays
+    $author = is_object($comment) ? (isset($comment->author) ? $comment->author : '') : (isset($comment['author']) ? $comment['author'] : '');
+    $date = is_object($comment) ? (isset($comment->frenchCreationDate) ? $comment->frenchCreationDate : '') : (isset($comment['french_creation_date']) ? $comment['french_creation_date'] : '');
+    $text = is_object($comment) ? (isset($comment->comment) ? $comment->comment : '') : (isset($comment['comment']) ? $comment['comment'] : '');
+    ?>
     <p>
-        <strong><?= htmlspecialchars($comment['author']) ?></strong>
-        le <?= $comment['french_creation_date'] ?>
+        <strong><?= htmlspecialchars($author) ?></strong>
+        le <?= $date ?>
     </p>
-    <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+    <p><?= nl2br(htmlspecialchars($text)) ?></p>
 <?php endforeach; ?>
 
 <h3>Ajouter un commentaire</h3>
-<form action="index.php?action=addComment&id=<?= $post['identifier'] ?>" method="post">
+<?php $postIdForForm = is_object($post) ? (isset($post->identifier) ? $post->identifier : '') : (isset($post['identifier']) ? $post['identifier'] : ''); ?>
+<form action="index.php?action=addComment&id=<?= $postIdForForm ?>" method="post">
     <div>
         <label for="author">Auteur</label><br />
         <input type="text" id="author" name="author" />
